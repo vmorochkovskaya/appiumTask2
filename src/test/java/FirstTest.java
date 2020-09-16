@@ -1,9 +1,14 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 
@@ -30,7 +35,32 @@ public class FirstTest {
     }
 
     @Test
-    public void firstTest() {
-        System.out.print("first test run");
+    public void testCompareSearchFieldText() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find search Wiki input",
+                5);
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "Incorrect search field text");
+    }
+
+    private void assertElementHasText(By by, String expectedText, String errorMsg) {
+        WebElement element = waitForElementPresent(by, errorMsg, 5);
+        Assert.assertEquals(errorMsg, expectedText, element.getText());
+    }
+
+    private WebElement waitForElementPresent(By by, String errorMsg, long timeoutSec) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutSec);
+        wait.withMessage(errorMsg + "\n");
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private WebElement waitForElementAndClick(By by, String errorMsg, long timeoutSec) {
+        WebElement element = waitForElementPresent(by, errorMsg, timeoutSec);
+        element.click();
+        return element;
     }
 }
