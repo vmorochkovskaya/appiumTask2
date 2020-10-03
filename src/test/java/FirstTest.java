@@ -76,6 +76,86 @@ public class FirstTest {
                 "Articles are still displayed clearing search field");
     }
 
+    @Test
+    public void testArticleAfterDeletionOneFromTwo() {
+        searchForArticleAndAddToList("Java", "My new List");
+//
+        //waitForElementAndClick(
+//                By.xpath("android.widget.ImageButton[@content-desc='Navigate up']"),
+//                "'Close' button didn't appear",
+//                5);
+//
+//        searchForArticleAndAddToList("Appium", "My new List");
+//
+//        waitForElementAndClick(
+//                By.xpath("android.widget.ImageButton[@content-desc='Navigate up']"),
+//                "'Close' button didn't appear",
+//                5);
+//
+//        waitForElementAndClick(
+//                By.xpath("android.widget.FrameLayout[@content-desc='My lists']"),
+//                "'Lists' button didn't appear",
+//                5);
+    }
+
+    private void searchForArticleAndAddToList(String article, String listName) {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find search Wiki input",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                article,
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath(String.format("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='%1s']", article)),
+                String.format("Articles were not found searching by '%1$s'", article),
+                5);
+
+        waitForElementAndClick(
+                By.id("More options"),
+                "'More options' button didn't appear",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "'Add to reading list' button didn't appear",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/onboarding_button"),
+                "'Got it' button didn't appear",
+                5);
+
+        By overlayInoutBy = By.id("org.wikipedia:id/text_input");
+
+        if (!isElementsPresent(overlayInoutBy, "'Overlay input' didn't appear", 5)) {
+            waitForElementAndClick(
+                    By.xpath(String.format("//android.widget.TextView[@text='%1$s']", listName)),
+                    String.format("Suggested list %1$s didn't appear", listName),
+                    5);
+        } else {
+            waitForElementAndClear(
+                    overlayInoutBy,
+                    "'Overlay input' didn't appear",
+                    5);
+
+            waitForElementAndSendKeys(
+                    overlayInoutBy,
+                    listName,
+                    "'Overlay input' didn't appear",
+                    5);
+
+            waitForElementAndClick(
+                    By.xpath("//android.widget.Button[@text='OK']"),
+                    "'OK' button didn't appear",
+                    5);
+        }
+    }
+
     private void assertElementHasText(By by, String expectedText, String errorMsg) {
         WebElement element = waitForElementPresent(by, errorMsg, 5);
         Assert.assertEquals(errorMsg, expectedText, element.getText());
