@@ -1,5 +1,9 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 
 public class FirstTest {
@@ -78,24 +83,58 @@ public class FirstTest {
 
     @Test
     public void testArticleAfterDeletionOneFromTwo() {
-        searchForArticleAndAddToList("Java", "My new List");
-//
-        //waitForElementAndClick(
-//                By.xpath("android.widget.ImageButton[@content-desc='Navigate up']"),
-//                "'Close' button didn't appear",
-//                5);
-//
-//        searchForArticleAndAddToList("Appium", "My new List");
-//
-//        waitForElementAndClick(
-//                By.xpath("android.widget.ImageButton[@content-desc='Navigate up']"),
-//                "'Close' button didn't appear",
-//                5);
-//
-//        waitForElementAndClick(
-//                By.xpath("android.widget.FrameLayout[@content-desc='My lists']"),
-//                "'Lists' button didn't appear",
-//                5);
+        String listName = "My new List";
+        String javaArticle = "Java";
+        String appiumArticle = "Appium";
+        By closeButtonLocator = By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']");
+
+        searchForArticleAndAddToList(javaArticle, listName);
+
+        waitForElementAndClick(
+                closeButtonLocator,
+                "'Close' button didn't appear",
+                5);
+
+        searchForArticleAndAddToList(appiumArticle, listName);
+
+        waitForElementAndClick(
+                closeButtonLocator,
+                "'Close' button didn't appear",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "'Lists' button didn't appear",
+                5);
+
+        waitForElementAndClick(
+                By.xpath(String.format("//*[@text='%1$s']", listName)),
+                String.format("'%1$s' didn't appear", listName),
+                5);
+
+        String articleLocator =
+                "(//*[@resource-id='org.wikipedia:id/page_list_item_container']//android.widget.LinearLayout)[.//android.widget.TextView[@text='%1$s']][2]";
+        swipeElementToLeft(
+                By.xpath(String.format(articleLocator, javaArticle)),
+                String.format("'%1$s' article didn't appear", javaArticle));
+
+        assertElementsDisplayed(
+                By.xpath(String.format(articleLocator, appiumArticle)),
+                String.format("'%1$s' article isn't displayed in articles list", appiumArticle));
+
+        waitForElementAndClick(
+                By.xpath(String.format(articleLocator, appiumArticle)),
+                String.format("'%1$s' article isn't displayed in articles list", appiumArticle),
+                5);
+
+        WebElement elementArticleTitle = waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Article title didn't appear",
+                5);
+
+        String articleTitle = elementArticleTitle.getText();
+
+        Assert.assertEquals("Article title isn't equals to expected after choosing from list", appiumArticle, articleTitle);
     }
 
     private void searchForArticleAndAddToList(String article, String listName) {
@@ -116,28 +155,32 @@ public class FirstTest {
                 5);
 
         waitForElementAndClick(
-                By.id("More options"),
+                MobileBy.AccessibilityId("More options"),
                 "'More options' button didn't appear",
-                5);
+                15);
 
         waitForElementAndClick(
                 By.xpath("//*[@text='Add to reading list']"),
                 "'Add to reading list' button didn't appear",
                 5);
 
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/onboarding_button"),
-                "'Got it' button didn't appear",
-                5);
 
-        By overlayInoutBy = By.id("org.wikipedia:id/text_input");
+        if (!isElementsPresent(By.id("org.wikipedia:id/onboarding_button"), "'Got it' button didn't appear", 5)) {
 
-        if (!isElementsPresent(overlayInoutBy, "'Overlay input' didn't appear", 5)) {
+
             waitForElementAndClick(
                     By.xpath(String.format("//android.widget.TextView[@text='%1$s']", listName)),
                     String.format("Suggested list %1$s didn't appear", listName),
                     5);
         } else {
+
+            waitForElementAndClick(
+                    By.id("org.wikipedia:id/onboarding_button"),
+                    "'Got it' button didn't appear",
+                    5);
+
+            By overlayInoutBy = By.id("org.wikipedia:id/text_input");
+
             waitForElementAndClear(
                     overlayInoutBy,
                     "'Overlay input' didn't appear",
@@ -221,5 +264,21 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, errorMsg, timeoutSec);
         element.clear();
         return element;
+    }
+
+    private void swipeElementToLeft(By by, String errorMessage) {
+        WebElement element = waitForElementPresent(by, errorMessage, 5);
+        int elementLeftX = element.getLocation().getX();
+        int elementRightX = elementLeftX + element.getSize().getWidth();
+        int elementUpperY = element.getLocation().getY();
+        int elementLowerY = elementUpperY + element.getSize().getHeight();
+        int elementMiddleY = (elementUpperY + elementLowerY) / 2;
+
+        TouchAction touchAction = new TouchAction(driver);
+        touchAction.press(PointOption.point(elementRightX, elementMiddleY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(100)))
+                .moveTo(PointOption.point(elementLeftX, elementMiddleY))
+                .release()
+                .perform();
     }
 }
