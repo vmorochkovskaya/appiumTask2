@@ -29,8 +29,8 @@ public class FirstTest {
         desiredCapabilities.setCapability("deviceName", "Android_Emulator");
         desiredCapabilities.setCapability("platformVersion", "8.0");
         desiredCapabilities.setCapability("automationName", "Appium");
-        desiredCapabilities.setCapability("appPackage", "org.wikipedia");
-        desiredCapabilities.setCapability("appActivity", ".main.MainActivity");
+//        desiredCapabilities.setCapability("appPackage", "org.wikipedia");
+//        desiredCapabilities.setCapability("appActivity", ".main.MainActivity");
         desiredCapabilities.setCapability("app", System.getProperty("user.dir") + "\\src\\test\\resources\\apks\\org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"), desiredCapabilities);
@@ -137,6 +137,31 @@ public class FirstTest {
         Assert.assertEquals("Article title isn't equals to expected after choosing from list", appiumArticle, articleTitle);
     }
 
+    @Test
+    public void testArticleHasTitle() {
+        String article = "Java";
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find search Wiki input",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                article,
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath(String.format("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='%1$s']", article)),
+                String.format("Articles were not found searching by '%1$s'", article),
+                5);
+
+        waitForElementPresent(By.id("org.wikipedia:id/page_contents_container"), "Article screen didn't appear", 5);
+
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"), String.format("'%1$s' article doesn't have title", article));
+    }
+
     private void searchForArticleAndAddToList(String article, String listName) {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -197,6 +222,11 @@ public class FirstTest {
                     "'OK' button didn't appear",
                     5);
         }
+    }
+
+    private void assertElementPresent(By by, String errorMsg) {
+        List elementsList = driver.findElements(by);
+        Assert.assertTrue(errorMsg, elementsList.size() > 0);
     }
 
     private void assertElementHasText(By by, String expectedText, String errorMsg) {
