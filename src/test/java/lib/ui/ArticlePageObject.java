@@ -12,7 +12,7 @@ public class ArticlePageObject extends MainPageObject {
     private static final String CLOSE = "accessibilityId:Navigate up";
     private static final String TITLE = "id:org.wikipedia:id/view_page_title_text";
     private static final String CONTENT =  "id:org.wikipedia:id/page_contents_container";
-    private static final String LIST_BY_SUBSTRING_TEMPLATE = "//android.widget.TextView[@text='%1$s']";
+    private static final String LIST_BY_SUBSTRING_TEMPLATE = "xpath://android.widget.TextView[@text='%1$s']";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
