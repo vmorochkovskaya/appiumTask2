@@ -1,19 +1,17 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ArticlePageObject extends MainPageObject {
-    private static final By MORE_OPTIONS = MobileBy.AccessibilityId("More options");
-    private static final By ADD_TO_READING_LIST =  By.xpath("//*[@text='Add to reading list']");
-    private static final By GOT_IT = By.id("org.wikipedia:id/onboarding_button");
-    private static final By OVERLAY_INPUT =  By.id("org.wikipedia:id/text_input");
-    private static final By OK = By.xpath("//android.widget.Button[@text='OK']");
-    private static final By CLOSE = MobileBy.AccessibilityId("Navigate up");
-    private static final By TITLE = By.id("org.wikipedia:id/view_page_title_text");
-    private static final By CONTENT =  By.id("org.wikipedia:id/page_contents_container");
+    private static final String MORE_OPTIONS = "accessibilityId:More options";
+    private static final String ADD_TO_READING_LIST = "xpath://*[@text='Add to reading list']";
+    private static final String GOT_IT = "id:org.wikipedia:id/onboarding_button";
+    private static final String OVERLAY_INPUT =  "id:org.wikipedia:id/text_input";
+    private static final String OK = "xpath://android.widget.Button[@text='OK']";
+    private static final String CLOSE = "accessibilityId:Navigate up";
+    private static final String TITLE = "id:org.wikipedia:id/view_page_title_text";
+    private static final String CONTENT =  "id:org.wikipedia:id/page_contents_container";
     private static final String LIST_BY_SUBSTRING_TEMPLATE = "//android.widget.TextView[@text='%1$s']";
 
     public ArticlePageObject(AppiumDriver driver) {
@@ -37,7 +35,7 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public void clickOnList(String list){
-        this.waitForElementAndClick(By.xpath(String.format(LIST_BY_SUBSTRING_TEMPLATE, list)),
+        this.waitForElementAndClick(String.format(LIST_BY_SUBSTRING_TEMPLATE, list),
                 String.format("Suggested list %1$s didn't appear", list), 5);
     }
 

@@ -1,3 +1,6 @@
+package tests;
+
+import lib.CoreTestCase;
 import lib.ui.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +20,7 @@ public class FirstTest extends CoreTestCase {
         searchPageObject.typeSearchLine(article);
         searchPageObject.assertSearchResultsDisplayed(article);
         searchPageObject.clearSearch();
-        searchPageObject.assertSearchResultsNotDisplayed();
+        searchPageObject.assertSearchResultsNotDisplayed(article);
     }
 
     @Test

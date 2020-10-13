@@ -1,7 +1,6 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
 public class ArticlesListPageObject extends MainPageObject {
     private static final String ARTICLE_BY_SUBSTRING_TPL =
@@ -12,15 +11,15 @@ public class ArticlesListPageObject extends MainPageObject {
     }
 
     public void removeArticle(String article) {
-        this.swipeElementToLeft(By.xpath(getArticleElement(article)), String.format("'%1$s' article isn't displayed in articles list", article));
+        this.swipeElementToLeft(getArticleElement(article), String.format("'%1$s' article isn't displayed in articles list", article));
     }
 
     public void assertArticleDisplayed(String article) {
-        this.assertElementsDisplayed(By.xpath(getArticleElement(article)),  String.format("'%1$s' article isn't displayed in articles list", article));
+        this.assertElementsDisplayed(getArticleElement(article),  String.format("'%1$s' article isn't displayed in articles list", article));
     }
 
     public void clickOnArticle(String article) {
-        this.waitForElementAndClick(By.xpath(getArticleElement(article)), String.format("'%1$s' article isn't displayed in articles list", article), 5);
+        this.waitForElementAndClick(getArticleElement(article), String.format("'%1$s' article isn't displayed in articles list", article), 5);
     }
 
     private String getArticleElement(String article) {
