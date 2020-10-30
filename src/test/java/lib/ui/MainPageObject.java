@@ -119,10 +119,6 @@ public class MainPageObject {
                 .perform();
     }
 
-    protected boolean isIOs() {
-        return System.getProperty("PLATFORM").equals("iOS");
-    }
-
     private By getLocatorByType(String locatorWithType) {
         String[] explodedLocator = locatorWithType.split(Pattern.quote(":"), 2);
         String type = explodedLocator[0];

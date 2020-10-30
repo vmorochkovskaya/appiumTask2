@@ -2,6 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.*;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testSearchAndCancelSearch() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         String article = "Java";
         searchPageObject.typeSearchLine(article);
@@ -55,7 +56,7 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testArticleHasTitle() {
         String article = "Java";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(article);
         searchPageObject.clickArticle(article);
@@ -66,7 +67,7 @@ public class FirstTest extends CoreTestCase {
     }
 
     private void searchForArticleAndAddToList(String article, String listName) {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(article);
         searchPageObject.clickArticle(article);
