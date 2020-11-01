@@ -2,10 +2,10 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class StartPageObject extends MainPageObject {
-    private static final String MY_LISTS = "accessibilityId:My lists";
+public abstract class StartPageObject extends MainPageObject {
+    protected static String MY_LISTS;
 
-    private static final String LIST_BY_SUBSTRING_TPL = "xpath://*[contains(@text,'%1$s')]";
+    protected static String LIST_BY_SUBSTRING_TPL;
 
     public StartPageObject(AppiumDriver driver) {
         super(driver);
@@ -15,7 +15,5 @@ public class StartPageObject extends MainPageObject {
         this.waitForElementAndClick(MY_LISTS, "'Lists' button didn't appear", 5);
     }
 
-    public void clickOnList(String list) {
-        this.waitForElementAndClick(String.format(LIST_BY_SUBSTRING_TPL, list), String.format("'%1$s' didn't appear", list), 15);
-    }
+    public abstract void clickOnList(String list);
 }

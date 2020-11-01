@@ -2,8 +2,10 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.*;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.ArticlesListPageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
-import org.junit.Assert;
+import lib.ui.factories.StartPageObjectFactory;
 import org.junit.Test;
 
 public class FirstTest extends CoreTestCase {
@@ -32,25 +34,24 @@ public class FirstTest extends CoreTestCase {
 
         searchForArticleAndAddToList(javaArticle, listName);
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.clickClose();
 
         searchForArticleAndAddToList(appiumArticle, listName);
 
         articlePageObject.clickClose();
 
-        StartPageObject startPageObject = new StartPageObject(driver);
+        StartPageObject startPageObject = StartPageObjectFactory.get(driver);
         startPageObject.clickOnMyLists();
         startPageObject.clickOnList(listName);
 
-        ArticlesListPageObject articlesListPageObject = new ArticlesListPageObject(driver);
+        ArticlesListPageObject articlesListPageObject = ArticlesListPageObjectFactory.get(driver);
         articlesListPageObject.removeArticle(javaArticle);
         articlesListPageObject.assertArticleDisplayed(appiumArticle);
         articlesListPageObject.clickOnArticle(appiumArticle);
 
-        articlePageObject = new ArticlePageObject(driver);
-        String articleTitle = articlePageObject.waitAndGetArticleTitle();
-        Assert.assertEquals("Article title isn't equals to expected after choosing from list", appiumArticle, articleTitle);
+        articlePageObject = ArticlePageObjectFactory.get(driver);
+        articlePageObject.waitForArticleTitle(appiumArticle);
     }
 
     @Test
@@ -61,7 +62,7 @@ public class FirstTest extends CoreTestCase {
         searchPageObject.typeSearchLine(article);
         searchPageObject.clickArticle(article);
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForScreenToBeOpened();
         articlePageObject.assertTitleCurrentlyPresent(article);
     }
@@ -72,17 +73,8 @@ public class FirstTest extends CoreTestCase {
         searchPageObject.typeSearchLine(article);
         searchPageObject.clickArticle(article);
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
-        articlePageObject.clickMoreOptions();
-        articlePageObject.clickAddToReadingList();
-
-        if (!articlePageObject.isGotItPresent()) {
-            articlePageObject.clickOnList(listName);
-        } else {
-            articlePageObject.clickGotIt();
-            articlePageObject.clearOverlay();
-            articlePageObject.typeInOverlay(listName);
-            articlePageObject.clickOk();
-        }
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
+        articlePageObject.waitForArticleTitle(article);
+        articlePageObject.addArticlesToReadingList(listName);
     }
 }

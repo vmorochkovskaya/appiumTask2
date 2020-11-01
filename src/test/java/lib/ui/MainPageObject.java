@@ -136,4 +136,15 @@ public class MainPageObject {
                 throw new IllegalArgumentException("Cannot get type of locator");
         }
     }
+
+    public void clickElementToRightUpperCorner(String locator, String errorMessage) {
+        WebElement element = this.waitForElementPresent(locator, errorMessage, 5);
+        int elementX = element.getLocation().getX();
+        int elementY = element.getLocation().getY();
+        int lowerY = elementY + element.getSize().getHeight();
+        int middleY = (elementY + lowerY) / 2;
+        int pointToClickX = elementX + element.getSize().getWidth() - 3;
+        TouchAction action = new TouchAction(driver);
+        action.tap(PointOption.point(pointToClickX, middleY)).perform();
+    }
 }

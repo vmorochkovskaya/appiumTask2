@@ -10,6 +10,7 @@ public class SearchPageObjectFactory {
 
     public static SearchPageObject get(AppiumDriver driver){
         if (Platform.getInstance().isIos()) {
+            System.out.println("fksdlkfd;lfk");
             return new IOSSearchPageObject(driver);
         } else {
             return new AndroidSearchPageObject(driver);

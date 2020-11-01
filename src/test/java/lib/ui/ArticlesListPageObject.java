@@ -2,16 +2,17 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class ArticlesListPageObject extends MainPageObject {
-    private static final String ARTICLE_BY_SUBSTRING_TPL =
-            "(//*[@resource-id='org.wikipedia:id/page_list_item_container']//android.widget.LinearLayout)[.//android.widget.TextView[@text='%1$s']][2]";
+public abstract class ArticlesListPageObject extends MainPageObject {
+    protected static String ARTICLE_BY_SUBSTRING_TPL;
 
     public ArticlesListPageObject(AppiumDriver driver) {
         super(driver);
     }
 
-    public void removeArticle(String article) {
-        this.swipeElementToLeft(getArticleElement(article), String.format("'%1$s' article isn't displayed in articles list", article));
+    public abstract void removeArticle(String article);
+
+    public void waitForArticleToDisappearByTitle(String article) {
+        this.waitForElementNotPresent(getArticleElement(article), "Saved article still present with title " + article, 10);
     }
 
     public void assertArticleDisplayed(String article) {
@@ -22,7 +23,7 @@ public class ArticlesListPageObject extends MainPageObject {
         this.waitForElementAndClick(getArticleElement(article), String.format("'%1$s' article isn't displayed in articles list", article), 5);
     }
 
-    private String getArticleElement(String article) {
+    protected String getArticleElement(String article) {
         return String.format(ARTICLE_BY_SUBSTRING_TPL, article);
     }
 }

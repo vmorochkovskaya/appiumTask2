@@ -3,16 +3,16 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
-    private static final String MORE_OPTIONS = "accessibilityId:More options";
-    private static final String ADD_TO_READING_LIST = "xpath://*[@text='Add to reading list']";
-    private static final String GOT_IT = "id:org.wikipedia:id/onboarding_button";
-    private static final String OVERLAY_INPUT =  "id:org.wikipedia:id/text_input";
-    private static final String OK = "xpath://android.widget.Button[@text='OK']";
-    private static final String CLOSE = "accessibilityId:Navigate up";
-    private static final String TITLE = "id:org.wikipedia:id/view_page_title_text";
-    private static final String CONTENT =  "id:org.wikipedia:id/page_contents_container";
-    private static final String LIST_BY_SUBSTRING_TEMPLATE = "xpath://android.widget.TextView[@text='%1$s']";
+public abstract class ArticlePageObject extends MainPageObject {
+    protected static String MORE_OPTIONS;
+    protected static String ADD_TO_READING_LIST;
+    protected static String GOT_IT;
+    protected static String OVERLAY_INPUT;
+    protected static String OK;
+    protected static String CLOSE;
+    protected static String TITLE;
+    protected static String CONTENT;
+    protected static String LIST_BY_SUBSTRING_TEMPLATE;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -55,10 +55,11 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(CLOSE, "'Close' button didn't appear", 5);
     }
 
-    public String waitAndGetArticleTitle() {
-        WebElement elementArticleTitle = this.waitForElementPresent(TITLE, "Article title didn't appear", 5);
-        return elementArticleTitle.getText();
+    public void waitForArticleTitle(String title) {
+        this.waitForElementPresent(String.format(TITLE, title), String.format("Article title %1$s didn't appear", title), 5);
     }
+
+    public abstract void addArticlesToReadingList(String listName);
 
     public void waitForScreenToBeOpened() {
         this.waitForElementPresent(CONTENT, "Article screen didn't appear", 5);
