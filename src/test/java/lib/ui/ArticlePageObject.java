@@ -13,6 +13,7 @@ public abstract class ArticlePageObject extends MainPageObject {
     protected static String TITLE;
     protected static String CONTENT;
     protected static String LIST_BY_SUBSTRING_TEMPLATE;
+    protected static String ADDED_TO_READING_LIST_ICON;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -55,8 +56,17 @@ public abstract class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(CLOSE, "'Close' button didn't appear", 5);
     }
 
+    public String waitAndGetArticleTitle() {
+        WebElement elementArticleTitle = this.waitForElementPresent(TITLE, "Article title didn't appear", 5);
+        return elementArticleTitle.getText();
+    }
+
     public void waitForArticleTitle(String title) {
         this.waitForElementPresent(String.format(TITLE, title), String.format("Article title %1$s didn't appear", title), 5);
+    }
+
+    public boolean isArticleAddedToList() {
+        return this.isElementPresent(ADDED_TO_READING_LIST_ICON, "Article doesn't have 'Saved' icon", 5);
     }
 
     public abstract void addArticlesToReadingList(String listName);

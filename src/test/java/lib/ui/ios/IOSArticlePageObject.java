@@ -8,6 +8,7 @@ public class IOSArticlePageObject extends ArticlePageObject {
         ADD_TO_READING_LIST = "id:Save for later";
         CLOSE = "id:Back";
         TITLE = "id:%1$s";
+        ADDED_TO_READING_LIST_ICON = "id:Saved. Activate to unsave.";
     }
 
     public IOSArticlePageObject(AppiumDriver driver) {

@@ -1,11 +1,13 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.ArticlesListPageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 import lib.ui.factories.StartPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class DeletionFromListTest extends CoreTestCase {
@@ -38,7 +40,12 @@ public class DeletionFromListTest extends CoreTestCase {
         articlesListPageObject.clickOnArticle(appiumArticle);
 
         articlePageObject = ArticlePageObjectFactory.get(driver);
-        articlePageObject.waitForArticleTitle(appiumArticle);
+        if (Platform.getInstance().isAndroid()) {
+            String articleTitle = articlePageObject.waitAndGetArticleTitle();
+            Assert.assertEquals("Article title isn't equals to expected after choosing from list", appiumArticle, articleTitle);
+        } else {
+            Assert.assertTrue(String.format("Article %1$s doesn't have 'Saved' bottom icon", appiumArticle), articlePageObject.isArticleAddedToList());
+        }
     }
 
     private void searchForArticleAndAddToList(String article, String listName) {
