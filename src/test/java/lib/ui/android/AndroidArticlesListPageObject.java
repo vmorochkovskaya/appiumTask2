@@ -6,7 +6,7 @@ import lib.ui.ArticlesListPageObject;
 public class AndroidArticlesListPageObject extends ArticlesListPageObject {
     static {
         ARTICLE_BY_SUBSTRING_TPL =
-                "(//*[@resource-id='org.wikipedia:id/page_list_item_container']//android.widget.LinearLayout)[.//android.widget.TextView[@text='%1$s']][2]";
+                "xpath:(//*[@resource-id='org.wikipedia:id/page_list_item_container']//android.widget.LinearLayout)[.//android.widget.TextView[@text='%1$s']][2]";
 
     }
 

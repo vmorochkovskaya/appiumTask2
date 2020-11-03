@@ -42,7 +42,7 @@ public class Platform {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability("platformName", "Android");
         desiredCapabilities.setCapability("deviceName", "Android_Emulator");
-        desiredCapabilities.setCapability("platformVersion", "8.0");
+        desiredCapabilities.setCapability("platformVersion", "11.0");
         desiredCapabilities.setCapability("automationName", "Appium");
         desiredCapabilities.setCapability("app", System.getProperty("user.dir") + "\\src\\test\\resources\\apks\\org.wikipedia.apk");
         return desiredCapabilities;

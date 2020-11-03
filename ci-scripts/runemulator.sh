@@ -1,0 +1,1 @@
+emulator @Android_Emulator &
