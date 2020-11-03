@@ -5,21 +5,28 @@ import io.appium.java_client.MobileBy;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import tests.SearchTest;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class MainPageObject {
-    public AppiumDriver driver;
+    private static final String BODY_LOADED_ANIMATION = "css:body.minerva-animations-ready";
+    public RemoteWebDriver driver;
 
-    public MainPageObject(AppiumDriver driver) {
+    public MainPageObject(RemoteWebDriver driver) {
         this.driver = driver;
     }
 
@@ -68,9 +75,16 @@ public class MainPageObject {
     }
 
     public WebElement waitForElementPresent(String locator, String errorMsg, long timeoutSec) {
+        this.waitForElementsPresent(BODY_LOADED_ANIMATION, "Animation wasn't loaded", 10);
         WebDriverWait wait = new WebDriverWait(driver, timeoutSec);
         wait.withMessage(errorMsg + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(getLocatorByType(locator)));
+    }
+
+    public WebElement waitForElementClickable(String locator, String errorMsg, long timeoutSec) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutSec);
+        wait.withMessage(errorMsg + "\n");
+        return wait.until(ExpectedConditions.elementToBeClickable(getLocatorByType(locator)));
     }
 
     public List<WebElement> waitForElementsPresent(String locator, String errorMsg, long timeoutSec) {
@@ -104,19 +118,23 @@ public class MainPageObject {
     }
 
     public void swipeElementToLeft(String locator, String errorMessage) {
-        WebElement element = waitForElementPresent(locator, errorMessage, 15);
-        int elementLeftX = element.getLocation().getX();
-        int elementRightX = elementLeftX + element.getSize().getWidth();
-        int elementUpperY = element.getLocation().getY();
-        int elementLowerY = elementUpperY + element.getSize().getHeight();
-        int elementMiddleY = (elementUpperY + elementLowerY) / 2;
+        if (driver instanceof AppiumDriver) {
+            WebElement element = waitForElementPresent(locator, errorMessage, 15);
+            int elementLeftX = element.getLocation().getX();
+            int elementRightX = elementLeftX + element.getSize().getWidth();
+            int elementUpperY = element.getLocation().getY();
+            int elementLowerY = elementUpperY + element.getSize().getHeight();
+            int elementMiddleY = (elementUpperY + elementLowerY) / 2;
 
-        TouchAction touchAction = new TouchAction(driver);
-        touchAction.press(PointOption.point(elementRightX, elementMiddleY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(100)))
-                .moveTo(PointOption.point(elementLeftX, elementMiddleY))
-                .release()
-                .perform();
+            TouchAction touchAction = new TouchAction((AppiumDriver) driver);
+            touchAction.press(PointOption.point(elementRightX, elementMiddleY))
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(100)))
+                    .moveTo(PointOption.point(elementLeftX, elementMiddleY))
+                    .release()
+                    .perform();
+        } else {
+            System.out.println("Method 'swipeElementToLeft' does nothing for platform " + Platform.getInstance().getPlatform());
+        }
     }
 
     private By getLocatorByType(String locatorWithType) {
@@ -132,19 +150,25 @@ public class MainPageObject {
                 return MobileBy.AccessibilityId(locator);
             case "ios_predicate_string":
                 return MobileBy.iOSNsPredicateString(locator);
+            case "css":
+                return By.cssSelector(locator);
             default:
                 throw new IllegalArgumentException("Cannot get type of locator");
         }
     }
 
     public void clickElementToRightUpperCorner(String locator, String errorMessage) {
-        WebElement element = this.waitForElementPresent(locator, errorMessage, 5);
-        int elementX = element.getLocation().getX();
-        int elementY = element.getLocation().getY();
-        int lowerY = elementY + element.getSize().getHeight();
-        int middleY = (elementY + lowerY) / 2;
-        int pointToClickX = elementX + element.getSize().getWidth() - 3;
-        TouchAction action = new TouchAction(driver);
-        action.tap(PointOption.point(pointToClickX, middleY)).perform();
+        if (driver instanceof AppiumDriver) {
+            WebElement element = this.waitForElementPresent(locator, errorMessage, 5);
+            int elementX = element.getLocation().getX();
+            int elementY = element.getLocation().getY();
+            int lowerY = elementY + element.getSize().getHeight();
+            int middleY = (elementY + lowerY) / 2;
+            int pointToClickX = elementX + element.getSize().getWidth() - 3;
+            TouchAction action = new TouchAction((AppiumDriver) driver);
+            action.tap(PointOption.point(pointToClickX, middleY)).perform();
+        } else {
+            System.out.println("Method 'clickElementToRightUpperCorner' does nothing for platform " + Platform.getInstance().getPlatform());
+        }
     }
 }

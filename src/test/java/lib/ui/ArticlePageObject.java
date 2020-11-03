@@ -1,7 +1,7 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public abstract class ArticlePageObject extends MainPageObject {
     protected static String MORE_OPTIONS;
@@ -15,7 +15,7 @@ public abstract class ArticlePageObject extends MainPageObject {
     protected static String LIST_BY_SUBSTRING_TEMPLATE;
     protected static String ADDED_TO_READING_LIST_ICON;
 
-    public ArticlePageObject(AppiumDriver driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

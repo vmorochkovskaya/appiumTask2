@@ -1,6 +1,6 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public abstract class SearchPageObject extends MainPageObject {
     protected static String SEARCH_INPUT_ELEMENT,
@@ -9,13 +9,13 @@ public abstract class SearchPageObject extends MainPageObject {
             SEARCH_RESULTS,
             FILLED_SEARCH_ELEMENT;
 
-    public SearchPageObject(AppiumDriver driver) {
+    public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
     public void initSearchInput() {
         this.waitForElementAndClick(SEARCH_INPUT_ELEMENT, "Cannot find search Wiki input", 5);
-        this.waitForElementPresent(SEARCH_INPUT, "Cannot find search input after clicking search init element", 5);
+        this.waitForElementPresent(SEARCH_INPUT, "Cannot find search input after clicking search init element", 25);
     }
 
     public void typeSearchLine(String value) {

@@ -1,11 +1,13 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public abstract class ArticlesListPageObject extends MainPageObject {
     protected static String ARTICLE_BY_SUBSTRING_TPL;
+    protected static String LIST_BY_SUBSTRING_TPL;
+    protected static String REMOVE_FROM_LIST_BUTTON;
 
-    public ArticlesListPageObject(AppiumDriver driver) {
+    public ArticlesListPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -26,4 +28,7 @@ public abstract class ArticlesListPageObject extends MainPageObject {
     protected String getArticleElement(String article) {
         return String.format(ARTICLE_BY_SUBSTRING_TPL, article);
     }
+
+    public abstract void clickOnList(String list);
+
 }
